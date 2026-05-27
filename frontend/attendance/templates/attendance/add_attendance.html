@@ -1,0 +1,114 @@
+{% comment %} <!DOCTYPE html>
+<html>
+  <head>
+    <title>Add Attendance</title>
+  </head>
+  <body>
+    <h1>Mark Attendance</h1>
+
+    <form method="POST">
+      {% csrf_token %}
+
+      {{ form.as_p }}
+
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html> {% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Add Attendance</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+      
+      body {
+        background: #f4f7fc;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      
+      .form-container {
+        background: white;
+        width: 450px;
+        padding: 35px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      
+      h1 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #1e293b;
+      }
+      
+      form p {
+        margin-bottom: 18px;
+      }
+      
+      input,
+      select {
+        width: 100%;
+        padding: 12px;
+        margin-top: 6px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+      }
+      
+      button {
+        width: 100%;
+        padding: 12px;
+        background: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      
+      button:hover {
+        background: #1d4ed8;
+      }
+      
+      .back-btn {
+        display: block;
+        text-align: center;
+        margin-top: 18px;
+        text-decoration: none;
+        color: #2563eb;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="form-container">
+      {% if error %}
+        <div class="error-box">{{ error }}</div>
+      {% endif %}
+      <h1>Mark Attendance</h1>
+
+      <form method="POST">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit">Submit Attendance</button>
+      </form>
+
+      <a href="/" class="back-btn">← Back to Home</a>
+    </div>
+  </body>
+</html>

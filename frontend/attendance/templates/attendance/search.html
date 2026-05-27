@@ -1,0 +1,345 @@
+{% comment %} <!DOCTYPE html>
+<html>
+<head>
+    <title>Search Student</title>
+</head>
+<body>
+
+<h1>Search Student</h1>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit">Search</button>
+
+</form>
+
+
+{% if percentage %}
+
+<h2>Attendance Percentage</h2>
+
+<p>
+    Roll Number: {{ percentage.roll_number }}
+</p>
+
+<p>
+    Percentage: {{ percentage.percentage }}%
+</p>
+
+{% endif %}
+
+
+{% if records %}
+
+<h2>Attendance Records</h2>
+
+<table border="1">
+
+    <tr>
+        <th>Name</th>
+        <th>Date</th>
+        <th>Status</th>
+    </tr>
+
+    {% for record in records %}
+
+    <tr>
+        <td>{{ record.student_name }}</td>
+        <td>{{ record.date }}</td>
+        <td>{{ record.status }}</td>
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+{% endif %}
+
+</body>
+</html> {% endcomment %}
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Search Student</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            padding: 12px 20px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .percentage-box {
+            background-color: #eff6ff;
+            border-left: 5px solid #2563eb;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+        }
+
+        .percentage-box p {
+            margin-top: 10px;
+        }
+
+        .chart-container {
+            width: 320px;
+            margin: 30px auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+
+        table th,
+        table td {
+            padding: 14px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f5f9;
+        }
+
+        .present {
+            color: green;
+            font-weight: bold;
+        }
+
+        .absent {
+            color: red;
+            font-weight: bold;
+        }
+
+        .home-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: #2563eb;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <a href="/" class="home-link">
+        ← Back to Home
+    </a>
+
+    <h1>Search Student Attendance</h1>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <input type="text"
+               name="roll_number"
+               placeholder="Enter Roll Number"
+               required>
+
+        <button type="submit">
+            Search
+        </button>
+
+    </form>
+
+    {% if percentage %}
+
+    <div class="percentage-box">
+
+        <h2>Attendance Percentage</h2>
+
+        <p>
+            <strong>Roll Number:</strong>
+            {{ percentage.roll_number }}
+        </p>
+
+        <p>
+            <strong>Total Classes:</strong>
+            {{ percentage.total_classes }}
+        </p>
+
+        <p>
+            <strong>Present Count:</strong>
+            {{ percentage.present_count }}
+        </p>
+
+        <p>
+            <strong>Percentage:</strong>
+            {{ percentage.percentage }}%
+        </p>
+
+    </div>
+
+    <!-- PIE CHART -->
+
+    <div class="chart-container">
+
+        <canvas id="attendanceChart"></canvas>
+
+    </div>
+
+    {% endif %}
+
+    {% if records %}
+
+    <table>
+
+        <tr>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Status</th>
+        </tr>
+
+        {% for record in records %}
+
+        <tr>
+
+            <td>{{ record.student_name }}</td>
+
+            <td>{{ record.date }}</td>
+
+            <td>
+
+                {% if record.status == "Present" %}
+                    <span class="present">Present</span>
+                {% else %}
+                    <span class="absent">Absent</span>
+                {% endif %}
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    {% endif %}
+
+</div>
+
+{% if percentage %}
+
+<script>
+
+    const presentCount = {{ percentage.present_count }};
+    const totalClasses = {{ percentage.total_classes }};
+    const absentCount = totalClasses - presentCount;
+
+    const ctx = document.getElementById('attendanceChart');
+
+    new Chart(ctx, {
+
+        type: 'pie',
+
+        data: {
+
+            labels: ['Present', 'Absent'],
+
+            datasets: [{
+
+                data: [presentCount, absentCount],
+
+                backgroundColor: [
+                    '#22c55e',
+                    '#ef4444'
+                ],
+
+                borderWidth: 1
+
+            }]
+        },
+
+        options: {
+
+            responsive: true,
+
+            plugins: {
+
+                legend: {
+                    position: 'bottom'
+                }
+
+            }
+
+        }
+
+    });
+
+</script>
+
+{% endif %}
+
+</body>
+</html>
