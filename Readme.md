@@ -130,6 +130,6 @@ The FastAPI backend provides the following endpoints, which are consumed by the 
 | Method | Endpoint                               | Description                                      |
 | :----- | :------------------------------------- | :----------------------------------------------- |
 | `POST` | `/attendance/`                         | Adds a new attendance record.                    |
-| `GET`` | `/attendance/`                         | Retrieves a list of all attendance records.      |
+| `GET` | `/attendance/`                         | Retrieves a list of all attendance records.      |
 | `GET`  | `/attendance/{roll_number}`            | Searches for attendance records by roll number.  |
 | `GET`  | `/attendance/percentage/{roll_number}` | Calculates attendance percentage for a student.  |
